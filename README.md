@@ -1,37 +1,31 @@
 # AdMesh Unity SDK
 
-AdMesh lets you place image or video ads on meshes in a Unity game.
-
-This repo is the public Unity package only. It does not include private tools, internal publishing notes, or server-side business logic.
+Unity SDK for integrating image and video ad placements on in-game surfaces.
 
 ## What this package includes
 
-- Unity runtime scripts for loading and showing ads
-- an inspector for configuring placements in the Editor
-- placeholder assets for testing
-- a sample bootstrap script
+- runtime code for requesting, loading, and rendering AdMesh placements
+- Unity Editor inspectors for placement setup
+- a configuration template in `StreamingAssets`
+- a basic sample in `Samples~/BasicPlacement`
 
-## What you need before you start
+## Supported engine version
 
 - Unity `2022.3` or newer
-- an AdMesh SDK key
-- at least one AdMesh ad unit ID
 
-## Install
+## Installation
 
-### Option 1: Unity Package Manager
+### Unity Package Manager
 
-Open `Window > Package Manager`, choose `Add package from git URL`, and use this repo URL.
+Use `Add package from git URL` in the Unity Package Manager and point it to this repository.
 
-### Option 2: Local package
+### Local package
 
-Copy this repo into your Unity project's `Packages/` folder and reference it as a local package.
+Copy the package into your project's `Packages/` folder and reference it as a local package.
 
 ## Quick start
 
-### 1. Initialize the SDK once
-
-Create a startup script and initialize AdMesh when your game starts:
+Initialize the SDK once when your game starts:
 
 ```csharp
 using AdMesh.Core;
@@ -41,64 +35,76 @@ public sealed class GameBootstrap : MonoBehaviour
 {
     private void Awake()
     {
-        AdMeshPlugin.Initialize("YOUR_SDK_KEY");
+        AdMeshPlugin.Initialize("YOUR_ADMESH_SDK_KEY");
     }
 }
 ```
 
-### 2. Add a placement
+Then:
 
-Add `AdMeshPlacementComponent` to any GameObject that has a `Renderer`.
+1. Add `AdMeshPlacementComponent` to a GameObject with a `Renderer`.
+2. Set the `Ad Unit ID`.
+3. Keep `Use Real Ads` disabled while validating the scene.
+4. Configure fallback content if you want a custom development placeholder.
 
-Set these fields in the Inspector:
+## Configuration
 
-- `Ad Unit ID`
-- `Ad Format`
-- `Use Real Ads`
+The package uses the public AdMesh production endpoints by default:
 
-### 3. Test safely
+- `https://select.admesh.cloud`
+- `https://events.admesh.cloud`
 
-Keep `Use Real Ads` turned off while you are building or testing your scene.
-
-Turn it on only after:
-
-- your SDK key is correct
-- your ad unit is correct
-- you are ready to request live ads
-
-## Optional config file
-
-You can also create `StreamingAssets/admesh_config.json` from the example file:
+You can also provide a minimal config file at `StreamingAssets/admesh_config.json`:
 
 ```json
 {
-  "sdkKey": "YOUR_SDK_KEY",
-  "adSelectorUrl": "https://your-selector-endpoint",
-  "eventCollectorUrl": "https://your-event-endpoint"
+  "sdkKey": "YOUR_ADMESH_SDK_KEY"
 }
 ```
 
-If you pass values directly to `AdMeshPlugin.Initialize(...)`, those values are used first.
+## Test and fallback mode
 
-## Supported media
+- Keep `Use Real Ads` disabled during development and QA.
+- Use fallback content while validating placement surfaces and layout.
+- Enable live serving only after the app and ad unit are configured in AdMesh.
 
-- Images: `.png`, `.jpg`, `.jpeg`
-- Video: `.mp4`
+## Production setup
 
-## Package layout
+Before turning on live serving:
 
-- `Runtime/` contains the runtime SDK code
-- `Editor/` contains the Unity inspector tools
-- `StreamingAssets/` contains the config template
-- `Samples~/` contains a basic sample
+- create or select your app in AdMesh
+- create the target ad unit
+- verify your SDK key and ad unit ID
+- validate the placement in a development build first
 
-## Notes
+## Events and telemetry
 
-- This SDK is for fixed in-game ad surfaces.
-- Ad delivery decisions are handled by AdMesh services.
-- Server-side business rules are not stored in this package.
+When configured, the SDK may contact AdMesh services and send delivery, diagnostic, and heartbeat events required for ad serving, verification, reporting, and abuse prevention.
 
-## Support
+## Advanced configuration
 
-- Portal: https://dev.admesh.cloud
-- Email: support@admesh.cloud
+Most integrations should use the default AdMesh production endpoints. Only override service URLs for approved staging or self-hosted testing workflows.
+
+## Troubleshooting
+
+- If a placement stays on fallback content, verify the SDK key and ad unit ID first.
+- If a video placement does not play, confirm the source asset and renderer setup.
+- If the package does not initialize from config, check the `StreamingAssets/admesh_config.json` location and JSON format.
+
+## Links
+
+- Website: [admesh.cloud](https://admesh.cloud)
+- Developer Portal: [dev.admesh.cloud](https://dev.admesh.cloud)
+- Privacy Notice: [PRIVACY.md](./PRIVACY.md)
+- Terms: [TERMS.md](./TERMS.md)
+- Third-Party Notices: [THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md)
+- Release Checklist: [PUBLIC_RELEASE_CHECKLIST.md](./PUBLIC_RELEASE_CHECKLIST.md)
+- Release Process: [RELEASE_PROCESS.md](./RELEASE_PROCESS.md)
+
+## License
+
+Unless otherwise noted, AdMesh-authored source code in this repository is licensed under Apache-2.0. See [LICENSE](./LICENSE).
+
+## Third-party notices
+
+See [THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md).

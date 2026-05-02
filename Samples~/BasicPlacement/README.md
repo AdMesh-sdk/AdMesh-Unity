@@ -1,10 +1,10 @@
 # Unity Sample: Basic Placement
 
-This sample shows the minimum runtime wiring for the public Unity SDK.
+This sample shows the minimum setup for a single AdMesh placement in Unity.
 
 ## Included files
 
-- `GameBootstrap.cs` initializes the SDK once at startup.
+- `GameBootstrap.cs` for one-time SDK initialization at startup
 
 ## Scene setup
 
@@ -13,16 +13,13 @@ This sample shows the minimum runtime wiring for the public Unity SDK.
 3. Add a plane or quad with a `Renderer`.
 4. Add `AdMeshPlacementComponent` to that object.
 5. Set:
-   - `Ad Unit Id`
-   - `Use Real Ads = true` only after the app and placement are approved for live serving
-   - optional fallback texture
+   - `Ad Unit ID`
+   - `Use Real Ads = false` while testing
+   - optional fallback content
 
 ## What to verify
 
-- the placement loads a scheduled creative successfully
-- the inspector only offers supported public formats (`Image`, `Video`)
-- the SDK generates one runtime `session_id` and includes it in selector/proof traffic
-- proof events use the selector-issued `selection_token` and include `schedule_id`
-- 5-minute heartbeat reporting runs while the placement is active
-- lease expiry swaps back to fallback content instead of leaving stale paid content on-screen indefinitely
-- the game continues normally if selector or collector requests fail
+- the placement initializes without blocking the scene
+- fallback content renders during development
+- a live creative loads after valid app and ad unit configuration
+- the game continues normally if AdMesh requests fail
